@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Button, Modal, Form } from "react-bootstrap";
+import { Container, Button, Modal, Form, Row, Col } from "react-bootstrap";
 
 import Calendar from "../components/Calendar";
 import { createNote, deleteNote, getNotesByMonth, updateCompleted } from "../apis/noteApi";
@@ -19,7 +19,6 @@ const HomePage = () => {
     const loadEvents = async () => {
       try {
         const notes = await getNotesByMonth(year, month);
-        console.log("notes: ", notes);
 
         const grouped = notes.reduce((acc, note) => {
           const dateKey = note.eventDate;
@@ -99,7 +98,25 @@ const HomePage = () => {
 
   return (
     <Container className="mt-4">
-      <h2 className="text-center mb-4">📅 달력 메모장</h2>
+      <Row className="align-items-center mb-4">
+        <Col className="text-start">
+          <h2>📅 달력 To Do App</h2>
+        </Col>        
+
+        {/* 버튼 영역 */}
+        <Col className="text-end">
+          <Button
+            variant="success"
+            disabled={!selectedDate}
+            onClick={() => setShowModal(true)}
+            className="me-2"
+          >등록하기</Button>
+          <Button variant="info" 
+            disabled={!selectedDate || !events[selectedDate]?.length}
+            onClick={() => setShowEventsModal(true)}
+          >리스트 보기</Button>
+        </Col>
+      </Row>
 
       {/* 달력 컴포넌트 */}
       <Calendar
@@ -111,22 +128,6 @@ const HomePage = () => {
         setSelectedDate={setSelectedDate}
         events={events}
       />
-
-      {/* 등록 버튼 */}
-      <div className="text-center mt-3">
-        <Button
-          variant="success"
-          disabled={!selectedDate}
-          onClick={() => setShowModal(true)}
-        >
-          등록하기
-        </Button>
-        {" "}
-        <Button variant="info" 
-          disabled={!selectedDate || !events[selectedDate]?.length}
-          onClick={() => setShowEventsModal(true)}
-        >이벤트 보기</Button>
-      </div>
 
       {/* 메모 등록 모달 */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -143,7 +144,7 @@ const HomePage = () => {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Control as="textarea" rows={5}
+            <Form.Control as="textarea" rows={10}
               placeholder="내용을 입력하세요"
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -160,7 +161,7 @@ const HomePage = () => {
       {/* 이벤트 보기 모달 */}
       <Modal show={showEventsModal} onHide={() => setShowEventsModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>{selectedDate} 이벤트 목록</Modal.Title>
+          <Modal.Title>{selectedDate} To Do List</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {events[selectedDate]?.map((note) => (
@@ -179,7 +180,9 @@ const HomePage = () => {
                   {note.title}
                 </strong>
               </div>              
-              <p className="small text-muted">{note.content}</p>
+              <p className="small text-muted" style={{ whiteSpace: "pre-line" }}>
+                {note.content}
+              </p>
               <div className="text-end">
                 <button className="btn btn-sm btn-danger"
                   onClick={() => handleDelete(note, selectedDate)}

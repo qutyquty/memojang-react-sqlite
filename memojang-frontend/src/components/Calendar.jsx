@@ -55,6 +55,10 @@ const Calendar = ({ year, setYear, month, setMonth, selectedDate, setSelectedDat
             // 오늘 날짜 강조
             const isToday = date === todayString;
 
+            // 해당 일자 이벤트에서 완료 이벤트 구하기
+            const dayEvents = events[date] || [];
+            const completedCount = dayEvents.filter(e => e.completed).length;
+
             return (
               <Col key={date}>
                 <Card
@@ -78,15 +82,12 @@ const Calendar = ({ year, setYear, month, setMonth, selectedDate, setSelectedDat
                     >
                       {day}
                     </div>
-                    {events[date]?.slice(0, 2).map((ev, idx) => (
-                      <div key={idx} className={
-                        ev.completed ? "mt-1 small text-success text-decoration-line-through" : "mt-1 small text-info"
-                      }>
-                        {ev.title}
+                    {dayEvents.length > 0 && (
+                      <div style={{ fontSize: "1.5em", fontWeight: "bold", marginTop: "5px", }}>
+                        <span style={{ color: "green" }}>{completedCount}</span> 
+                        {" / "}
+                        <span style={{ color: "orange" }}>{dayEvents.length}</span>
                       </div>
-                    ))}
-                    {events[date]?.length > 2 && (
-                      <div className="small text-muted">+더보기</div>
                     )}
                   </Card.Body>
                 </Card>

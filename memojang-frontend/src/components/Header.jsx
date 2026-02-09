@@ -6,7 +6,7 @@ const Header = () => {
       <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
         <Container>
           {/* 브랜드 로고 */}
-          <Navbar.Brand href="/">Memojang</Navbar.Brand>
+          <Navbar.Brand href="/">To Do</Navbar.Brand>
 
           {/* 햄버거 버튼 */}
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
